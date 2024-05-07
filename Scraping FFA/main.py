@@ -14,7 +14,7 @@ outdoor = True
 page = "0"
 vent = "VR"
 
-dicos.LISTE_ATHLETES = []
+#dicos.LISTE_ATHLETES = []
 
 url = f"https://bases.athle.fr/asp.net/liste.aspx?frmpostback=true&frmbase=bilans&frmmode=1&frmespace=0&frmannee={annee}&frmathlerama=&frmfcompetition=&frmfepreuve=&frmepreuve={epreuve}&frmplaces=&frmnationalite=&frmamini=&frmamaxi=&frmsexe={sexe}&frmcategorie={categorie}&frmvent={vent}"
 
@@ -64,6 +64,7 @@ def get_pages(url):
 
 
 def extract_data_from_page(url):
+    dicos.LISTE_ATHLETES = []
     print("extract_data_from_page : " + url)
     response = requests.get(url)
     print(response.status_code)
@@ -155,7 +156,7 @@ print("-------------------------------------------------------------------------
 print("--------------------------------------------------------------------------------------------")
 print("----------------------------------- TEST LISTE ATHLETES ------------------------------------")
 for athlete in dicos.LISTE_ATHLETES:
-    print(athlete.classement + " - " + athlete.nom + " : " + athlete.chrono)
+        print(athlete.classement + " - " + athlete.nom + " : " + athlete.chrono)
 
 ctk.set_appearance_mode("System")
 
@@ -233,8 +234,12 @@ def correspondance(choice, dicos):
 
 
 def display(liste):
+    print("display")
     for athlete in liste:
-        tk_textbox.insert(window, athlete.classement + " " + athlete.chrono + " " + athlete.nom)
+        if athlete.nom == "PRAUDEL Clément":
+            tk_textbox.insert("0.0", athlete.classement + " " + athlete.chrono + " " + athlete.nom + "\n","bold")
+        else:
+            tk_textbox.insert("0.0", athlete.classement + " " + athlete.chrono + " " + athlete.nom + "\n")
 
 
 url = f"https://bases.athle.fr/asp.net/liste.aspx?frmpostback=true&frmbase=bilans&frmmode=1&frmespace=0&frmannee={annee}&frmathlerama=&frmfcompetition=&frmfepreuve=&frmepreuve={epreuve}&frmplaces=&frmnationalite=&frmamini=&frmamaxi=&frmsexe={sexe}&frmcategorie={categorie}&frmvent={vent}"
@@ -261,7 +266,7 @@ btn_envoi = ctk.CTkButton(window, text="Envoi", command=lambda: extract_data_fro
              correspondance(sex_string.get(), dicos.dico_sexes))))
 btn_envoi.grid(row=4, column=2, columnspan=2, padx=20, pady=20, sticky="ew")
 
-btn_display = ctk.CTkButton(window, text="Display", command=display(dicos.LISTE_ATHLETES))
+btn_display = ctk.CTkButton(window, text="Display", command=lambda: display(dicos.LISTE_ATHLETES))
 btn_display.grid(row=5, column=2, columnspan=2, padx=20, pady=20, sticky="ew")
 
 # create scrollable textbox
