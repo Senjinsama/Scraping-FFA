@@ -165,42 +165,42 @@ ctk.set_default_color_theme("green")
 window = tk.Tk()
 
 window.title("Athlete App")
-window.geometry("1024x768")
+window.geometry("1280x900")
 
 
 def combobox_callback(choice):
     print(choice)
 
 
-yearLabel = ctk.CTkLabel(window, text="Année")
+yearLabel = ctk.CTkLabel(window, text="Année",text_color = "black")
 yearLabel.grid(row=0, column=0, padx=20, pady=20, sticky="ew")
 year_string = tk.StringVar(value=dicos.liste_annee[4])
 yearChoice = ttk.Combobox(window, values=dicos.liste_annee, textvariable=year_string)
 yearChoice.bind('<<ComboboxSelected>>', lambda event: combobox_callback(year_string.get()))
 yearChoice.grid(row=0, column=1, padx=20, pady=20, sticky="ew")
 
-sexlabel = ctk.CTkLabel(window, text="Sexe")
+sexlabel = ctk.CTkLabel(window, text="Sexe",text_color = "black")
 sexlabel.grid(row=0, column=2, padx=20, pady=20, sticky="ew")
 sex_string = tk.StringVar(value=dicos.liste_sexe[0])
 sexChoice = ttk.Combobox(window, values=dicos.liste_sexe, textvariable=sex_string)
 sexChoice.bind('<<ComboboxSelected>>', lambda event: combobox_callback(sex_string.get()))
 sexChoice.grid(row=0, column=3, padx=20, pady=20, sticky="ew")
 
-categorieLabel = ctk.CTkLabel(window, text="Catégorie")
+categorieLabel = ctk.CTkLabel(window, text="Catégorie",text_color = "black")
 categorieLabel.grid(row=0, column=4, padx=20, pady=20, sticky="ew")
 cate_string = tk.StringVar(value=dicos.liste_categorie[0])
 categorieChoice = ttk.Combobox(window, values=dicos.liste_categorie, textvariable=cate_string)
 categorieChoice.bind('<<ComboboxSelected>>', lambda event: combobox_callback(cate_string.get()))
 categorieChoice.grid(row=0, column=5, padx=20, pady=20, sticky="ew")
 
-typeCompetitionLabel = ctk.CTkLabel(window, text="Type")
+typeCompetitionLabel = ctk.CTkLabel(window, text="Type",text_color = "black")
 typeCompetitionLabel.grid(row=1, column=0, padx=20, pady=20, sticky="ew")
 type_comp_string = tk.StringVar(value=dicos.liste_In_Out[0])
 typeCompetitionChoice = ttk.Combobox(window, values=dicos.liste_In_Out, textvariable=type_comp_string)
 typeCompetitionChoice.bind('<<ComboboxSelected>>', lambda event: combobox_callback(type_comp_string.get()))
 typeCompetitionChoice.grid(row=1, column=1, padx=20, pady=20, sticky="ew")
 
-epreuveLabel = ctk.CTkLabel(window, text="Epreuve")
+epreuveLabel = ctk.CTkLabel(window, text="Epreuve",text_color = "black")
 epreuveLabel.grid(row=1, column=2, padx=20, pady=20, sticky="ew")
 epreuve_string = tk.StringVar(value=dicos.liste_epreuves_outdoor[0])
 epreuveChoice = ttk.Combobox(window, values=dicos.liste_epreuves_outdoor, textvariable=epreuve_string)
@@ -235,12 +235,14 @@ def correspondance(choice, dicos):
 
 def display(liste):
     print("display")
-    for athlete in liste:
-        if athlete.nom == "PRAUDEL Clément":
-            tk_textbox.insert("0.0", athlete.classement + " " + athlete.chrono + " " + athlete.nom + "\n","bold")
+    for athlete in liste[::-1]:
+        if athlete.nom == "PRAUDEL Clement":
+            tk_textbox.insert("0.0", athlete.classement + " [~~ " + athlete.chrono + " ~~]" + athlete.nom + "\n","bold")
         else:
             tk_textbox.insert("0.0", athlete.classement + " " + athlete.chrono + " " + athlete.nom + "\n")
 
+def export_csv(liste):
+    print("CSV")
 
 url = f"https://bases.athle.fr/asp.net/liste.aspx?frmpostback=true&frmbase=bilans&frmmode=1&frmespace=0&frmannee={annee}&frmathlerama=&frmfcompetition=&frmfepreuve=&frmepreuve={epreuve}&frmplaces=&frmnationalite=&frmamini=&frmamaxi=&frmsexe={sexe}&frmcategorie={categorie}&frmvent={vent}"
 url_final = clic_url(url_final, year_string.get(), correspondance(epreuve_string.get(), dicos.dico_epreuves_outdoor),
@@ -255,29 +257,34 @@ btn = ctk.CTkButton(window, text="Url a créer",
 # command = lambda: [extract_data_from_page(url), print(    f'{year_string.get()} / {sex_string.get()} / {cate_string.get()} / {type_comp_string.get()} / {epreuve_string.get()}'),print(f"Url btn : {url}")],
 
 # btn.bind("<Button>", lambda event: clic_url(url, annee))
-btn.grid(row=2, column=2, columnspan=2, padx=20, pady=20, sticky="ew")
+btn.grid(row=3, column=1, columnspan=2, padx=20, pady=20, sticky="ew")
 print("Final B : " + url_final)
 url_string = url_final
-label_url = tk.Label(window, text='url', textvariable=url_string)
-label_url.grid(row=3, column=2, columnspan=2, padx=20, pady=20, sticky="ew")
+#label_url = tk.Label(window, text='url', textvariable=url_string)
+#label_url.grid(row=3, column=2, columnspan=2, padx=20, pady=20, sticky="ew")
 btn_envoi = ctk.CTkButton(window, text="Envoi", command=lambda: extract_data_from_page(
     clic_url(url_final, year_string.get(), correspondance(epreuve_string.get(), dicos.dico_epreuves_outdoor),
              correspondance(cate_string.get(), dicos.dico_categories),
              correspondance(sex_string.get(), dicos.dico_sexes))))
-btn_envoi.grid(row=4, column=2, columnspan=2, padx=20, pady=20, sticky="ew")
+btn_envoi.grid(row=4, column=1, columnspan=2, padx=20, pady=20, sticky="ew")
 
 btn_display = ctk.CTkButton(window, text="Display", command=lambda: display(dicos.LISTE_ATHLETES))
-btn_display.grid(row=5, column=2, columnspan=2, padx=20, pady=20, sticky="ew")
+btn_display.grid(row=5, column=1, columnspan=2, padx=20, pady=20, sticky="ew")
+
+btn_csv = ctk.CTkButton(window, text= "CSV", command=lambda : export_csv(dicos.LISTE_ATHLETES))
+btn_csv.grid(row=6, column=1, columnspan=2, padx=20, pady=20, sticky="ew")
 
 # create scrollable textbox
 tk_textbox = tk.Text(window, highlightthickness=0)
-tk_textbox.grid(row=6, column=1, sticky="nsew")
+tk_textbox.grid(row=7, column=1, sticky="nsew")
 
 # create CTk scrollbar
 ctk_textbox_scrollbar = ctk.CTkScrollbar(window, command=tk_textbox.yview)
-ctk_textbox_scrollbar.grid(row=6, column=2, columnspan=1, sticky="ns")
+ctk_textbox_scrollbar.grid(row=7, column=2, columnspan=1, sticky="ns")
 
 # connect textbox scroll event to CTk scrollbar
 tk_textbox.configure(yscrollcommand=ctk_textbox_scrollbar.set)
+
+tk_textbox.tag_configure("bold", font=("Arial", 10, "bold"))
 
 window.mainloop()
