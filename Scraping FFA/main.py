@@ -1,3 +1,4 @@
+from datetime import datetime
 import dicos
 from bs4 import BeautifulSoup
 import requests
@@ -5,6 +6,7 @@ from athlete import Athlete
 import customtkinter as ctk
 import tkinter as tk
 from tkinter import ttk
+import csv
 
 annee = "2024"
 sexe = "M"
@@ -235,6 +237,7 @@ def correspondance(choice, dicos):
 
 def display(liste):
     print("display")
+    tk_textbox.delete(1.0, tk.END)
     for athlete in liste[::-1]:
         if athlete.nom == "PRAUDEL Clement":
             tk_textbox.insert("0.0", athlete.classement + " [~~ " + athlete.chrono + " ~~]" + athlete.nom + "\n","bold")
@@ -242,7 +245,15 @@ def display(liste):
             tk_textbox.insert("0.0", athlete.classement + " " + athlete.chrono + " " + athlete.nom + "\n")
 
 def export_csv(liste):
-    print("CSV")
+    print("CSV" + " " + str(len(liste)))
+    myDatetime = datetime.now()
+    myString = myDatetime.strftime('%Y-%m-%d_%H-%M-%S')
+    with open("liste_athletes-" + myString + ".csv", 'w') as f:
+        ecrire = csv.writer(f,delimiter=',')
+        ecrire.writerow(['Classement','Name','Chrono'])
+
+        for athlete in liste:
+            ecrire.writerow([athlete.classement,athlete.nom,athlete.chrono])
 
 url = f"https://bases.athle.fr/asp.net/liste.aspx?frmpostback=true&frmbase=bilans&frmmode=1&frmespace=0&frmannee={annee}&frmathlerama=&frmfcompetition=&frmfepreuve=&frmepreuve={epreuve}&frmplaces=&frmnationalite=&frmamini=&frmamaxi=&frmsexe={sexe}&frmcategorie={categorie}&frmvent={vent}"
 url_final = clic_url(url_final, year_string.get(), correspondance(epreuve_string.get(), dicos.dico_epreuves_outdoor),
